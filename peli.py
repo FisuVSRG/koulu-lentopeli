@@ -79,8 +79,8 @@ while tila == 0:
     elif aloitus == "2":
         tila = 2
         while tila == 2:
-            print()
-# Lisää tähän funktio joka hakee korkeimmat tulokset järjestyksessä ja niiden käyttäjätunnukset.
+            # Lisää tähän funktio joka hakee korkeimmat tulokset järjestyksessä ja niiden käyttäjätunnukset.
+            tila = 0
 
 # Ohjelman lopettaminen
     elif aloitus == "3":
@@ -91,6 +91,7 @@ while tila == 0:
     else:
         print("Syöte on virheellinen. Anna syöte uudelleen.")
 
+# Ohjelman jatkaminen kun peli alkaa.
 while tila == 1:
     print("Jatka ohjelmaa.")
     mielipide = input("Mielipide: ")
