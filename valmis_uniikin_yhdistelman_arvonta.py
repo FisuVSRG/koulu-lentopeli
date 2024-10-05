@@ -4,7 +4,7 @@ import random
 # Loin tietokantaan game_id arvolla 1 (INSERT INTO game (ID, Score) VALUES (1, 0);) noin rivi 100
 
 # aliohjelma joka luo listan vanhoista yhditelmistä joissa jokainen yhdistelmä on alkio
-def vanhat_yhdistelmat():
+def vanhat_yhdistelmat(game_id):
     vanhat = []  # lista vanhoille lentokentille, joihin lisätään alkioiksi joukkoja (koodiparit)
     # Yhdistetään tietokantaan
     yhteys = mariadb.connect(
@@ -19,7 +19,7 @@ def vanhat_yhdistelmat():
         # Luodaan kursori
         kursori = yhteys.cursor()
 
-        # SQL kysely
+        # SQL kysely lisää tähän vielä se että se ottaa oikeasta game_id:stä
         haetaan_vanhat = """
             SELECT airport_ident1, airport_ident2
             FROM include;
@@ -45,7 +45,7 @@ def vanhat_yhdistelmat():
 
 print(vanhat_yhdistelmat())
 
-def arvo_kentta():  # pääaliohjelma joka kutsuu aiempaa KUTSU TÄTÄ
+def arvo_kentta(game_id):  # pääaliohjelma joka kutsuu aiempaa KUTSU TÄTÄ, saa parametriksi game_id
     yhdistelma = set()  # tyhjä joukko yksittäistä lentokenttäparia varten
     # yhdistetään tietokantaan
     yhteys = mariadb.connect(
