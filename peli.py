@@ -13,7 +13,7 @@ def connect_to_db():
             port=3306,
             database='flight_game',
             user='root',
-            password='kuha',
+            password='2422',
             autocommit=True
         )
         if connection.is_connected():
@@ -291,7 +291,7 @@ pisteet = 0
 
 # Pelin päävalikko
 while tila == 0:
-    print("Tervetuloa pelaamaan!")
+    input("Tervetuloa pelaamaan! Paina enter jatkaaksesi.")
     print("1) Aloita peli")
     print("2) Tulostaulukko")
     print("3) Sulje ohjelma")
@@ -314,6 +314,7 @@ while tila == 0:
 
 # Ohjelman lopettaminen
     elif aloitus == "3":
+        print("Nähdään ensi kerralla!")
         tila = 3
         break
 
@@ -323,6 +324,7 @@ while tila == 0:
 
 # Ohjelman jatkaminen kun peli alkaa.
 while tila == 1:
+    input("Tehtäväsi on valita kumpi kahdesta lentokentästä sijaitsee korkeammalla merenpinnasta \nPaina enter jatkaaksesi.")
     # Silmukka, joka kysyy pelaajalta 10 kertaa korkeammalla
     for i in range(1, 11):
         icao1, icao2 = arvo_kentta(game_id)
@@ -331,20 +333,25 @@ while tila == 1:
         nimi2 = lentokentan_nimi(icao2)
         print(f"1. {nimi1}")
         print(f"2. {nimi2}")
+
         while arvaus != "1" and arvaus != "2":
-            arvaus = input("Valitse lentokentistä korkeammalla oleva.")
+            arvaus = input("Valitse lentokentistä se, joka sijaitsee korkeammalla merenpinnasta.")
             if arvaus != "1" and arvaus != "2":
                 print("Virheellinen syöte.")
-            elif arvaus == oikein:
+            elif arvaus == oikein and arvaus == "1":
                 pisteet = pisteet + 100
-                print(f"Oikein! {oikein}, {korkeus1: .2f}m, {korkeus2: .2f}m")
-            elif arvaus != oikein:
+                print(f"Oikein! Valitsit {nimi1}, sen korkeus on {korkeus1: .2f}m")
+            elif arvaus == oikein and arvaus == "2":
+                pisteet = pisteet + 100
+                print(f"Oikein! Valitsit {nimi2}, sen korkeus on {korkeus2: .2f}m")
+            elif arvaus != oikein and arvaus == "1":
                 pisteet = pisteet
-                print(f"Väärin. {oikein}, {korkeus1: .2f}m, {korkeus2: .2f}m")
+                print(f"Väärin. Valitsit {nimi1}, sen korkeus on {korkeus1: .2f}m")
+            elif arvaus != oikein and arvaus == "2":
+                pisteet = pisteet
+                print(f"Väärin. Valitsit {nimi2}, sen korkeus on {korkeus2: .2f}m")
         arvaus = ""
     print(f"{pisteet}")
     tallenna_pisteet(username, user_id, pisteet, game_id)
     print("Kiitos pelaamisesta!!!")
     tila = 2
-
-# vittu mä hirtän itteni tänään
