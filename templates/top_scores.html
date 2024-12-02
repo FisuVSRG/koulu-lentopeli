@@ -4,10 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Top Scores</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch('/api/top-scores')
+                .then(response => response.json())
+                .then(data => {
+                    let tableBody = document.querySelector('#scoresTable tbody');
+                    tableBody.innerHTML = '';
+                    data.forEach(score => {
+                        let row = document.createElement('tr');
+                        let usernameCell = document.createElement('td');
+                        usernameCell.textContent = score.username;
+                        let scoreCell = document.createElement('td');
+                        scoreCell.textContent = score.score;
+                        row.appendChild(usernameCell);
+                        row.appendChild(scoreCell);
+                        tableBody.appendChild(row);
+                    });
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        });
+    </script>
 </head>
 <body>
     <h1>Top Scores</h1>
-    <table border="1">
+    <table id="scoresTable">
         <thead>
             <tr>
                 <th>Username</th>
@@ -15,12 +37,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for score in scores %}
-            <tr>
-                <td>{{ score.username }}</td>
-                <td>{{ score.score }}</td>
-            </tr>
-            {% endfor %}
+            <!-- JavaScript will dynamically populate this section -->
         </tbody>
     </table>
 </body>

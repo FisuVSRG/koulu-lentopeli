@@ -1,8 +1,10 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 from mysql.connector import Error
 import mysql.connector
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": ["http://localhost:8080"]}}, supports_credentials=True)
 
 @app.route('/')
 def index():
@@ -57,5 +59,10 @@ def top_scores():
     scores = tulostaulukko()
     return render_template('top_scores.html', scores=scores)
 
-if __name__ == '__main__':
-    app.run(debug=True)
+@app.route('/api/top-scores')
+def api_top_scores():
+    scores = tulostaulukko()
+    return jsonify(scores)
+
+if __name__ == "__main__":
+    app.run(debug=True, host="0.0.0.0", port=5000)
