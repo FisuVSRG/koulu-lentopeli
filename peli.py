@@ -13,7 +13,7 @@ def connect_to_db():
             port=3306,
             database='flight_game',
             user='root',
-            password='2422',
+            password='kuha',
             autocommit=True
         )
         if connection.is_connected():
