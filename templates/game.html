@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Game Page</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Enter Username</h1>
+    <form id="usernameForm">
+        <input type="text" id="username" name="username" required>
+        <button type="submit">Submit</button>
+    </form>
+    <div id="message"></div>
+
+    <script>
+        $(document).ready(function() {
+            $('#usernameForm').on('submit', function(event) {
+                event.preventDefault();
+                $.ajax({
+                    url: '/check_username',
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        $('#message').text(response.message);
+                        if (response.status === 'success') {
+                            $('#message').append(`<p>Game ID: ${response.game_id}</p>`);
+                            $('#message').append(`<p>User ID: ${response.user_id}</p>`);
+                        } else {
+                            $('#message').append(`<p>Error: ${response.message}</p>`);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        $('#message').text(`An error occurred: ${xhr.responseText}`);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
