@@ -23,19 +23,17 @@ class Lentokentta:
         self.icao = icao
         self.connection = connect_to_db()
         if self.connection: # Yhdistetään tietokantaan olioa luodessa.
+            self.cursor = self.connection.cursor()
             self.korkeus = self.hae_korkeus() # kutsutaan aliohjelmaa joka hakee korkeuden
             self.nimi = self.hae_nimi() # kutsutaan aliohjelmaa joka hakee nimen
             self.koordinaatit = self.hae_koordinaatit() # kutsutaan aliohjelmaa joka hakee koordinaatit
 
     def hae_korkeus(self): # hakee kentän korkeuden SQL tietokannasta
-        if self.connection is None:
-            return
 
         try:
-            cursor = self.connection.cursor()
             query = "SELECT elevation_ft FROM airport WHERE ident = ?"
-            cursor.execute(query, (self.icao,))
-            result = cursor.fetchone()
+            self.cursor.execute(query, (self.icao,))
+            result = self.cursor.fetchone()
             if result:
                 korkeus = result[0] * 0.3048  # Muunna metreiksi ja asetetaan
                 return korkeus
@@ -48,13 +46,10 @@ class Lentokentta:
 
 
     def hae_nimi(self):  # hakee kentän nimen SQL tietokannasta
-        if self.connection is None:
-            return
         try:
-            cursor = self.connection.cursor()
             query = "SELECT name FROM airport WHERE ident = ?"
-            cursor.execute(query, (self.icao,))
-            result = cursor.fetchone()
+            self.cursor.execute(query, (self.icao,))
+            result = self.cursor.fetchone()
             if result:
                 nimi = result[0] # asetetan haettu nimi nimeksi
                 return nimi
@@ -67,13 +62,10 @@ class Lentokentta:
 
 
     def hae_koordinaatit(self):  # hakee kentän koordinaatit SQL tietokannasta
-        if self.connection is None:
-            return
         try:
-            cursor = self.connection.cursor()
             query = "SELECT latitude_deg, longitude_deg FROM airport WHERE ident = ?"
-            cursor.execute(query, (self.icao,))
-            result = cursor.fetchone()
+            self.cursor.execute(query, (self.icao,))
+            result = self.cursor.fetchone()
             if result:
                 latitude = result[0]
                 longitude = result[1]
@@ -87,8 +79,12 @@ class Lentokentta:
             return None
 
         finally:
-            if self.connection:
-                self.connection.close()
+            self.close_connection()
+
+    def close_connection(self):
+        if self.connection:
+            self.connection.close()
+
 
 
 
