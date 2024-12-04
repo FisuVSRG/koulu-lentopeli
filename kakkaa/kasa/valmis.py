@@ -1,10 +1,10 @@
 import mariadb
 import random
-game_id = 6
+
 # Loin tietokantaan game_id arvolla 1 (INSERT INTO game (ID, Score) VALUES (1, 0);) noin rivi 100
 
 # aliohjelma joka luo listan vanhoista yhditelmistä joissa jokainen yhdistelmä on alkio
-def vanhat_yhdistelmat(game_id):
+def vanhat_yhdistelmat():
     vanhat = []  # lista vanhoille lentokentille, joihin lisätään alkioiksi joukkoja (koodiparit)
     # Yhdistetään tietokantaan
     yhteys = mariadb.connect(
@@ -19,7 +19,7 @@ def vanhat_yhdistelmat(game_id):
         # Luodaan kursori
         kursori = yhteys.cursor()
 
-        # SQL kysely lisää tähän vielä se että se ottaa oikeasta game_id:stä
+        # SQL kysely
         haetaan_vanhat = """
             SELECT airport_ident1, airport_ident2
             FROM include;
@@ -43,9 +43,9 @@ def vanhat_yhdistelmat(game_id):
             yhteys.close()
     return vanhat
 
-print(vanhat_yhdistelmat(game_id))
+print(vanhat_yhdistelmat())
 
-def arvo_kentta(game_id):  # pääaliohjelma joka kutsuu aiempaa KUTSU TÄTÄ, saa parametriksi game_id
+def arvo_kentta():  # pääaliohjelma joka kutsuu aiempaa KUTSU TÄTÄ
     yhdistelma = set()  # tyhjä joukko yksittäistä lentokenttäparia varten
     # yhdistetään tietokantaan
     yhteys = mariadb.connect(
@@ -93,7 +93,7 @@ def arvo_kentta(game_id):  # pääaliohjelma joka kutsuu aiempaa KUTSU TÄTÄ, s
         # Puretaan joukko kahdeksi muuttujaksi
         icao_1, icao_2 = yhdistelma
 
-        game_id = 1 # mikä ikinä onkaan se game ID muuttuja aiemmin
+        game_id = 1 # Kokeilemista varten oleva game ID, korvaa myöhemmin!!!!!
 
         # Lisätään yhdistelmä include-tauluun
         insert_query = """
@@ -112,4 +112,4 @@ def arvo_kentta(game_id):  # pääaliohjelma joka kutsuu aiempaa KUTSU TÄTÄ, s
 
     return yhdistelma  # palauttaa kaksi uniikkia ICAO-koodia joukkona
 
-print(arvo_kentta(game_id))
+print(arvo_kentta())
