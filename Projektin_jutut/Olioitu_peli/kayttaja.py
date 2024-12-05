@@ -2,8 +2,6 @@ import mariadb
 from yhteys import connect_to_db
 # Yhdistäminen tietokantaan
 
-
-
 class Kayttaja:
     def __init__(self):
         self.connection = connect_to_db()
