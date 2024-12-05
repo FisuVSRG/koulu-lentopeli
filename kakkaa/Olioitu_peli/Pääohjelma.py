@@ -1,35 +1,69 @@
 from kayttaja import Kayttaja
 from peli import Peli
-from kentta import Lentokentta
+from vertaa import vastaus
+from tulostaulukko import tulostaulukko  # Lisää tämä import
 
-if __name__ == "__main__":
+
+def main():
+    print("Tervetuloa Lentokenttä-haastepeliin!")
+    print("Tehtävänäsi on arvata, kumpi lentokentistä sijaitsee korkeammalla merenpinnasta.\n")
+
+    # Luo käyttäjä
     try:
-        # Luo käyttäjä-olio
-        kayttaja = Kayttaja()
+        user = Kayttaja()
+        print(f"Tervetuloa peliin, {user.username}!")
+    except ConnectionError as e:
+        print(f"Virhe tietokantayhteyden muodostamisessa: {e}")
+        return
 
-        # Luo peli-olio käyttäjän ID:n perusteella
-        if kayttaja.user_id:
-            peli = Peli(kayttaja.user_id)
-            print(f"Uusi peli luotu käyttäjälle {kayttaja.username}. Peli-ID: {peli.game_id}")
-
-            # Arvotaan lentokentät
-            kentat = peli.arvo_kentta() # tätä kutsutaan coreloopissa.
-            # Jaetaan vastaus kahteen
-            icao1, icao2 = kentat
-            # luodaan oliot
-            kentta1 = Lentokentta(icao1)
-            kentta2 = Lentokentta(icao2)
-            print(f"Arvotut lentokentät: {kentat}")
-            print(f"Kentän {icao1} nimi on: {kentta1.nimi}")
-            print(f"Kentän {icao2} nimi on: {kentta2.nimi}")
-
-        else:
-            print("Käyttäjän ID:tä ei voitu määrittää.")
+    # Luo uusi peli
+    try:
+        peli = Peli(user.user_id, user.username)
     except Exception as e:
-        print(f"Tapahtui virhe: {e}")
-    finally:
-        # Suljetaan yhteydet
-        if 'peli' in locals():
+        print(f"Virhe pelin alustamisessa: {e}")
+        user.close_connection()
+        return
+
+    # Päävalikko
+    while True:
+        print("\n--- PÄÄVALIKKO ---")
+        print("1. Pelaa peliä")
+        print("2. Katso tulostaulukko")
+        print("3. Lopeta peli")
+        valinta = input("Valitse toiminto (1-3): ").strip()
+
+        if valinta == "1":
+            # Pelisilmukka
+            pelaa = True
+            while pelaa:
+                print("\n--- UUSI KIERROS ---")
+                oikein = vastaus(peli)
+                if oikein is not None:  # Varmistaa, että kierros onnistui
+                    print(f"Nykyiset pisteesi: {peli.pisteet}\n")
+
+                # Tarkista haluaako käyttäjä jatkaa
+                jatka = input("Haluatko pelata uudelleen? (k/e): ").strip().lower()
+                if jatka != 'k':
+                    pelaa = False
+
+        elif valinta == "2":
+            # Näytä tulostaulukko
+            tulostaulukko(10)
+
+        elif valinta == "3":
+            # Päätetään peli
+            try:
+                peli.tallenna_pisteet()
+                print(f"\nPeli päättyy. Keräsit yhteensä {peli.pisteet} pistettä.")
+            except Exception as e:
+                print(f"Virhe pisteiden tallentamisessa: {e}")
+
+            # Sulje yhteydet
             peli.close_connection()
-        if 'kayttaja' in locals():
-            kayttaja.close_connection()
+            user.close_connection()
+
+            print("\nKiitos pelaamisesta! Näkemiin!")
+            break
+        else:
+            print("Virheellinen valinta, yritä uudelleen.")
+main()

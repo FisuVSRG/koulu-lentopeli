@@ -4,7 +4,7 @@ from yhteys import connect_to_db
 
 class Peli:
 
-    def __init__(self, user_id):
+    def __init__(self, user_id, username, pisteet = 0):
         """Kutsu antamalla kentta oliosta game_id kutsuessa.
         esim
         kayttaja1 = Kayttaja()
@@ -16,7 +16,9 @@ class Peli:
         self.cursor = self.connection.cursor()
         self.game_id = self.create_game_id(user_id)
         self.user_id = user_id
+        self.username = username
         self.vanhat_yhdistelmat = self.hae_vanhat_yhdistelmat() # lista jo käytettyille yhdistelmille
+        self.pisteet = pisteet
 
 
 
@@ -89,14 +91,17 @@ class Peli:
             self.connection.rollback()
         return yhdistelma
 
-##TÄMÄ ON UUTTAA PITÄÄ TARKISTAA
-    def tallenna_pisteet(self, pisteet):
-        """Updates the score for the current game."""
+    def lisaa_pisteita(self):
+        self.pisteet += 100
+        return self.pisteet
+
+    def tallenna_pisteet(self):
+        """Päivittää pisteitä tietokantaan."""
         try:
             query = "UPDATE game SET score = ? WHERE id = ? AND user_id = ?"
-            self.cursor.execute(query, (pisteet, self.game_id, self.user_id))
+            self.cursor.execute(query, (self.pisteet, self.game_id, self.user_id))
             self.connection.commit()
-            print(f"Pisteet tallennettu käyttäjälle: {self.username}, pisteet: {pisteet}")
+            print(f"Pisteet tallennettu käyttäjälle: {self.username}, pisteet: {self.pisteet}")
         except mariadb.Error as e:
             print(f"Virhe pisteiden tallentamisessa: {e}")
             self.connection.rollback()
