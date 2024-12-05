@@ -10,22 +10,25 @@ def tulostaulukko(top_mika):
     try:
         cursor = connection.cursor()
 
-        # Parametrisoitu kysely ilman suoraa LIMIT-parametria
-        tulokset = f"""
+        # Parametrisoitu kysely
+        tulokset = """
             SELECT user.username, game.score
             FROM user
             INNER JOIN game ON game.user_id = user.id
             WHERE game.score IS NOT NULL
             ORDER BY game.score DESC
-            LIMIT {top_mika}
+            LIMIT ?
         """
-        cursor.execute(tulokset)
+        cursor.execute(tulokset, (top_mika,))
         parhaat = cursor.fetchall()
 
         # Tulostetaan parhaat tulokset
-        print(f"TOP {top_mika} PELAAJAA:")
-        for i, (nimi, score) in enumerate(parhaat, 1):
-            print(f"{i}. {nimi}: {score} pistettä")
+        if parhaat:
+            print(f"\nTOP {top_mika} PELAAJAA:")
+            for i, (nimi, score) in enumerate(parhaat, 1):
+                print(f"{i}. {nimi}: {score} pistettä")
+        else:
+            print("\nEi tuloksia näytettäväksi.")
     except mariadb.Error as e:
         print(f"Virhe tulostaulukon hakemisessa: {e}")
     finally:

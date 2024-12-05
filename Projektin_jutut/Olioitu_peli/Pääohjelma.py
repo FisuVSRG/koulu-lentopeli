@@ -12,7 +12,6 @@ def main():
     # Luo käyttäjä
     try:
         user = Kayttaja()
-        print(f"Tervetuloa peliin, {user.username}!")
     except ConnectionError as e:
         print(f"Virhe tietokantayhteyden muodostamisessa: {e}")
         return
@@ -35,22 +34,21 @@ def main():
 
         if valinta == "1":
             # Pelisilmukka
-            pelaa = True
-            while pelaa:
-                for i in range(1, 11):
+                for i in range(1, 11): # Montako kierrosta peli kestää? +1
                     print("\n--- UUSI KIERROS ---")
                     oikein = vastaus(peli)
                     if oikein is not None:  # Varmistaa, että kierros onnistui
                         print(f"Nykyiset pisteesi: {peli.pisteet}\n")
+                try:
+                    peli.tallenna_pisteet()
+                    print(f"\nPeli päättyy. Keräsit yhteensä {peli.pisteet} pistettä.")
+                except Exception as e:
+                    print(f"Virhe pisteiden tallentamisessa: {e}")
 
-                    # Tarkista haluaako käyttäjä jatkaa
-                jatka = input("Haluatko pelata uudelleen? (k/e): ").strip().lower()
-                if jatka != 'k':
-                    pelaa = False
 
         elif valinta == "2":
             # Näytä tulostaulukko
-            tulostaulukko(10)
+            tulostaulukko(10) # Tulostaulukko on parametrisoitu ja nyt sen näyttämien tulosten määrää voi vaihtaa tästä
 
         elif valinta == "3":
             # Päätetään peli
