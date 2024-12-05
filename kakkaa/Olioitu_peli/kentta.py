@@ -1,20 +1,5 @@
 import mariadb
-
-# Yhdistäminen tietokantaan
-def connect_to_db():
-    try:
-        connection = mariadb.connect(
-            host='127.0.0.1',
-            port=3306,
-            database='flight_game',
-            user='root',
-            password='pidätunkkisi',
-            autocommit=True
-        )
-        return connection
-    except mariadb.Error as e:
-        print(f"Virhe yhteydessä MariaDB:hen: {e}")
-        return None
+from yhteys import connect_to_db
 
 # KENTTÄ-LUOKKA
 
@@ -22,11 +7,12 @@ class Lentokentta:
     def __init__(self, icao): # Alustaja
         self.icao = icao
         self.connection = connect_to_db()
-        if self.connection: # Yhdistetään tietokantaan olioa luodessa.
-            self.cursor = self.connection.cursor()
-            self.korkeus = self.hae_korkeus() # kutsutaan aliohjelmaa joka hakee korkeuden
-            self.nimi = self.hae_nimi() # kutsutaan aliohjelmaa joka hakee nimen
-            self.koordinaatit = self.hae_koordinaatit() # kutsutaan aliohjelmaa joka hakee koordinaatit
+        if not self.connection:
+            raise ConnectionError("Tietokantayhteyttä ei voitu muodostaa.")
+        self.cursor = self.connection.cursor()
+        self.korkeus = self.hae_korkeus() # kutsutaan aliohjelmaa joka hakee korkeuden
+        self.nimi = self.hae_nimi() # kutsutaan aliohjelmaa joka hakee nimen
+        self.koordinaatit = self.hae_koordinaatit() # kutsutaan aliohjelmaa joka hakee koordinaatit
 
     def hae_korkeus(self): # hakee kentän korkeuden SQL tietokannasta
 
@@ -35,7 +21,7 @@ class Lentokentta:
             self.cursor.execute(query, (self.icao,))
             result = self.cursor.fetchone()
             if result:
-                korkeus = result[0] * 0.3048  # Muunna metreiksi ja asetetaan
+                korkeus = result[0] * 0.3048  # Muunna metreiksi
                 return korkeus
             else:
                 print(f"Lentokentän korkeutta koodilla {self.icao} ei löytynyt.")
@@ -82,18 +68,9 @@ class Lentokentta:
             self.close_connection()
 
     def close_connection(self):
-        if self.connection:
-            self.connection.close()
-
-
-
-
-
-# Testaus
-
-icao_koodi = input("Anna lentokentän ICAO-koodi: ").strip() # Strip poistaa välilyönnit
-lentokentta = Lentokentta(icao_koodi)
-print(lentokentta.korkeus)
-print(lentokentta.nimi)
-print(lentokentta.icao)
-print(lentokentta.koordinaatit)
+        if self.connection:  # Tarkista, että yhteys on olemassa
+            try:
+                self.connection.close()
+                self.connection = None  # Nollaa yhteys attribuutista
+            except mariadb.Error as e:
+                print(f"Virhe yhteyden sulkemisessa: {e}")

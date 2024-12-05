@@ -181,6 +181,7 @@ def vertaa_lentokenttien_korkeudet(icao1, icao2):
             return None
         return ("1", korkeus1, korkeus2) if korkeus1 > korkeus2 else ("2", korkeus1, korkeus2)
     return None
+
 def tallenna_pisteet(username, user_id, pisteet, game_id):
     connection = connect_to_db()
     if connection is None:
