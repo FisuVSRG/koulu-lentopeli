@@ -16,6 +16,8 @@ def vertaa_lentokenttien_korkeudet(peli):
         if kentta1.korkeus is None or kentta2.korkeus is None:
             print("Tietoja lentokenttien korkeuksista ei löytynyt.")
             return None
+        print(kentta1.nimi)
+        print(kentta2.nimi)
         return (("1", kentta1.korkeus, kentta2.korkeus)
                 if kentta1.korkeus > kentta2.korkeus
                 else ("2", kentta1.korkeus, kentta2.korkeus))
@@ -25,9 +27,6 @@ def vertaa_lentokenttien_korkeudet(peli):
 
 def vastaus(peli):
 
-    input("Tehtäväsi on valita kumpi kahdesta lentokentästä"
-          " sijaitsee korkeammalla merenpinnasta"
-          " \nPaina enter jatkaaksesi.")
     onko_oikein = None
     oikea_vastaus = vertaa_lentokenttien_korkeudet(peli)[0]
     if oikea_vastaus is None:

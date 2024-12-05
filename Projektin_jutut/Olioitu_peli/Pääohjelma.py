@@ -1,7 +1,7 @@
 from kayttaja import Kayttaja
 from peli import Peli
 from vertaa import vastaus
-from tulostaulukko import tulostaulukko  # Lisää tämä import
+from tulostaulukko import tulostaulukko
 
 
 def main():
@@ -36,12 +36,13 @@ def main():
             # Pelisilmukka
             pelaa = True
             while pelaa:
-                print("\n--- UUSI KIERROS ---")
-                oikein = vastaus(peli)
-                if oikein is not None:  # Varmistaa, että kierros onnistui
-                    print(f"Nykyiset pisteesi: {peli.pisteet}\n")
+                for i in range(1, 11):
+                    print("\n--- UUSI KIERROS ---")
+                    oikein = vastaus(peli)
+                    if oikein is not None:  # Varmistaa, että kierros onnistui
+                        print(f"Nykyiset pisteesi: {peli.pisteet}\n")
 
-                # Tarkista haluaako käyttäjä jatkaa
+                    # Tarkista haluaako käyttäjä jatkaa
                 jatka = input("Haluatko pelata uudelleen? (k/e): ").strip().lower()
                 if jatka != 'k':
                     pelaa = False
