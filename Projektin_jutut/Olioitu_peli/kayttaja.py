@@ -68,7 +68,3 @@ class Kayttaja:
                 self.connection = None  # Nollaa yhteys attribuutista
             except mariadb.Error as e:
                 print(f"Virhe yhteyden sulkemisessa: {e}")
-
-
-
-

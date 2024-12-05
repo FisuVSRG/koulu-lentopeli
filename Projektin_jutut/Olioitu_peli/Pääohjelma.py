@@ -3,6 +3,7 @@ from peli import Peli
 from vertaa import vastaus
 from tulostaulukko import tulostaulukko
 
+# Esimerkki Pääohjelmasta Pythonissa
 
 def main():
     print("Tervetuloa Lentokenttä-haastepeliin!")
@@ -67,4 +68,4 @@ def main():
             break
         else:
             print("Virheellinen valinta, yritä uudelleen.")
-main()
+main() # Kutsutaan pääohjelmaa
