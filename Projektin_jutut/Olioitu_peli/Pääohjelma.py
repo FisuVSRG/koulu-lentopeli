@@ -37,7 +37,7 @@ def main():
             # Pelisilmukka
             pelaa = True
             while pelaa:
-                for i in range(1, 11):
+                for i in range(1, 11): # Montako kierrosta peli kestää? +1
                     print("\n--- UUSI KIERROS ---")
                     oikein = vastaus(peli)
                     if oikein is not None:  # Varmistaa, että kierros onnistui
@@ -50,7 +50,7 @@ def main():
 
         elif valinta == "2":
             # Näytä tulostaulukko
-            tulostaulukko(10)
+            tulostaulukko(10) # Tulostaulukko on parametrisoitu ja nyt sen näyttämien tulosten määrää voi vaihtaa tästä
 
         elif valinta == "3":
             # Päätetään peli
