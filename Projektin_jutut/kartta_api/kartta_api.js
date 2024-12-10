@@ -1,14 +1,22 @@
-let mapOptions = {
-    center: [59.3327, 18.0656],
-    zoom: 5
-};
+function createLeafletMap(coordinates, zoomLevel = 5) {
+  // Define map options with dynamic center based on coordinates
+  let mapOptions = {
+    center: coordinates,
+    zoom: zoomLevel
+  };
 
-let map = new L.map('map', mapOptions);
+  // Create the map
+  let map = new L.map('map', mapOptions);
 
-let layer = new L.TileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  // Add the tile layer
+  let layer = new L.TileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-});
-map.addLayer(layer);
+  });
+  map.addLayer(layer);
 
-let marker = new L.Marker([59.3327, 18.0656]); // tätä muokataan kun haetaan
-marker.addTo(map);
+  // Add a marker to the center (optional, can be customized)
+  let marker = new L.Marker(coordinates);
+  marker.addTo(map);
+}
+
+createLeafletMap([35.6895, 139.6917], 10); // Tokyo coordinates with zoom level 10
