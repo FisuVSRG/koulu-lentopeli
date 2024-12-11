@@ -195,7 +195,7 @@ def submit_answer():
     # Update score or any other game logic here
     score = session.get('score', 0)
     if is_correct:
-        score += 1
+        score += 100
     session['score'] = score
 
     return jsonify({

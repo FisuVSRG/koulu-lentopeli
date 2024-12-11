@@ -5,21 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Play</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
 </head>
-<script>
-    const username = "{{ username }}"; // Get username from Flask
-    document.addEventListener('DOMContentLoaded', async () => {
-        document.getElementById('displayUsername').textContent = username;
-        await playGame(); // Start the game when the page loads
-    });
-</script>
-<body class="play-page">
-<h2>Hello, <span id="displayUsername"></span>!</h2>
+<body class="play-page" onload="playGame()">
     <div id="game-content" class="menu-container">
-        <button id="btn1" onclick="playRound('correct')" class="menu-button left">Correct Answer</button>
+        <button id="btn1" onclick="playRound('correct')" class="menu-button left"></button>
         <div class="vertical-line"></div>
-        <button id="btn2" onclick="playRound('wrong')" class="menu-button right">Wrong Answer</button>
+        <button id="btn2" onclick="playRound('wrong')" class="menu-button right"></button>
     </div>
+<p id="currentScore"></p>
 </body>
 </html>
