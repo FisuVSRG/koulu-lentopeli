@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, url_for
+from flask import Flask, render_template, request, jsonify, url_for, session
 from mysql.connector import Error
 import mysql.connector
 from flask_cors import CORS
@@ -10,6 +10,8 @@ from yhteys import connect_to_db
 
 app = Flask(__name__, template_folder='templates')
 CORS(app, resources={r"/*": {"origins": ["http://localhost:5000"]}}, supports_credentials=True)
+app.secret_key = 'supersecretkey'  # Required for flash messages
+
 
 def get_db_connection():
     conn = connect_to_db()
@@ -50,6 +52,18 @@ def play():
 def api_top_scores():
     scores = tulostaulukko(10)
     return jsonify(scores)
+
+@app.route('/handle_form_ajax', methods=['POST'])
+def handle_form_ajax():
+    username = request.form['username']
+    try:
+        kayttaja = Kayttaja()
+        kayttaja.tallenna_kayttajatunnus(username)
+        session['username'] = kayttaja.username
+        return jsonify(username=kayttaja.username)
+    except Exception as e:
+        return jsonify(message=str(e)), 400
+
 
 
 if __name__ == "__main__":

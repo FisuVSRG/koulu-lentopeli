@@ -8,9 +8,82 @@
 </head>
 <body>
     <div class="menu-container">
-        <h1 class="title">PLAY</h1>
-        <p>Welcome to the PLAY page. Your game will start here!</p>
-        <a href="{{ url_for('index') }}" class="menu-button">Back to Menu</a>
+        <form id="usernameForm">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+        <button type="submit">Submit</button>
+    </form>
+    <div id="gameContent">
+        <h2>Hello, <span id="displayUsername"></span>!</h2>
+        <p>Welcome to the game! Make your choices below:</p>
+        <div>
+            <button onclick="playRound('correct')">Correct Answer</button>
+            <button onclick="playRound('wrong')">Wrong Answer</button>
+        </div>
+        <p>Your current score: <span id="currentScore">0</span></p>
+        <button onclick="saveScores()">Save Scores</button>
     </div>
+    <script>
+        document.getElementById('usernameForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const user_id = Math.floor(Math.random() * 1000); // Example: Generate a mock user ID
+
+            const response = await fetch('/start_game', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id, username })
+            });
+
+            const data = await response.json();
+            if (data.error) {
+                alert(data.error);
+                return;
+            }
+
+            document.getElementById('displayUsername').textContent = username;
+            document.getElementById('usernameForm').style.display = 'none';
+            document.getElementById('gameContent').style.display = 'block';
+        });
+
+        async function playRound(answer) {
+            const response = await fetch('/play_round', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ answer })
+            });
+
+            const data = await response.json();
+            if (data.error) {
+                alert(data.error);
+                return;
+            }
+
+            if (data.round_combination) {
+                alert(`Round combination: ${data.round_combination.join(', ')}`);
+            }
+
+            document.getElementById('currentScore').textContent = data.score;
+            alert(`Correct: ${data.correct}, Score: ${data.score}`);
+        }
+
+        async function saveScores() {
+            const response = await fetch('/save_scores', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            });
+
+            const data = await response.json();
+            if (data.error) {
+                alert(data.error);
+            } else {
+                alert(data.message);
+            }
+        }
+    </script>
+    </div>
+<div>
+    <a href="{{ url_for('index') }}" class="menu-button">Back to Menu</a>
+</div>
 </body>
 </html>
