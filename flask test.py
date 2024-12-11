@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, url_for
 from mysql.connector import Error
 import mysql.connector
 from flask_cors import CORS
@@ -8,30 +8,49 @@ from vertaa import vastaus
 from tulostaulukko import tulostaulukko
 from yhteys import connect_to_db
 
-app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": ["http://localhost:8080"]}}, supports_credentials=True)
+app = Flask(__name__, template_folder='templates')
+CORS(app, resources={r"/*": {"origins": ["http://localhost:5000"]}}, supports_credentials=True)
 
+def get_db_connection():
+    conn = connect_to_db()
+    if not conn:
+        raise ConnectionError("Failed to connect to the database.")
+    return conn
 
+# Route to serve main page
 @app.route('/')
 def index():
+    leaderboard_url = url_for('leaderboards')
+    print(f"Leaderboard URL: {leaderboard_url}")
+    play_url = url_for('play')
+    print(f"Play URL: {play_url}")
+    play_url = url_for('play')
+    print(f"Play URL: {play_url}")
     return render_template('index.html')
 
-
-@app.route('/game')
-def game():
-    return render_template('game.html')
-
-
-@app.route('/another-page')
-def another_page():
-    return render_template('another_page.html')
-
-
 @app.route('/leaderboards')
-def top_scores():
+def leaderboards():
+    index_url = url_for('index')
+    print(f"Index URL: {index_url}")
+    return render_template('leaderboards.html')
+
+@app.route('/help')
+def help():
+    index_url = url_for('index')
+    print(f"Index URL: {index_url}")
+    return render_template('help.html')
+
+@app.route('/play')
+def play():
+    index_url = url_for('index')
+    print(f"Index URL: {index_url}")
+    return render_template('play.html')
+
+@app.route('/api/leaderboards')
+def api_top_scores():
     scores = tulostaulukko(10)
-    return render_template('leaderboards.html', scores=scores)
+    return jsonify(scores)
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    app.run(debug=True)

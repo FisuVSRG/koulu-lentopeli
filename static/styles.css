@@ -1,54 +1,69 @@
 body {
+    margin: 0;
+    padding: 0;
+    background: url('background.jpg') no-repeat center center fixed;
+    background-size: cover;
+    font-family: 'Minecraft', sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background: linear-gradient(to bottom, #87ceeb, #f0f8ff);
-    margin: 0;
-    font-family: Arial, sans-serif;
+    overflow: hidden;
 }
 
 .menu-container {
     text-align: center;
-    background-color: rgba(255, 255, 255, 0.8);
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    color: white;
+    text-shadow: 2px 2px 5px black;
 }
 
-.name{
-    text-align: center;
-    background-color: rgba(255, 255, 255, 0.8);
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.title {
+    font-size: 4rem;
+    margin-bottom: 2rem;
 }
 
-h1 {
-    margin-bottom: 30px;
-    font-size: 36px;
-    color: #333;
+.menu {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
 .menu-button {
-    display: block;
-    width: 200px;
-    padding: 15px;
-    margin: 10px auto;
-    font-size: 18px;
+    background: #2e8b57;
+    border: 2px solid #1d5e3a;
     color: white;
-    background-color: #007BFF;
-    border: none;
-    border-radius: 5px;
+    padding: 1rem 2rem;
+    font-size: 1.5rem;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    transition: transform 0.2s, background 0.3s;
 }
 
 .menu-button:hover {
-    background-color: #0056b3;
-    transform: translateY(-2px);
+    transform: scale(1.1);
+    background: #3cb371;
 }
 
 .menu-button:active {
-    transform: translateY(0);
+    transform: scale(1.05);
+    background: #276c4b;
+}
+
+.leaderboard {
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background for leaderboard */
+    padding: 1rem;
+    border-radius: 10px;
+    max-width: 400px;
+    margin: 0 auto;
+    color: white;
+}
+
+.leaderboard ol {
+    list-style: decimal;
+    padding: 0;
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.leaderboard li {
+    margin: 0.5rem 0;
 }

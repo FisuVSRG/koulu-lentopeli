@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Leaderboards - Flight Game</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            fetch('/leaderboards')
+            fetch('/api/leaderboards')
                 .then(response => response.json())
                 .then(data => {
                     let tableBody = document.querySelector('#scoresTable tbody');
@@ -44,7 +44,7 @@
                 </tbody>
             </table>
         </div>
-        <a href="index.html" class="menu-button">Back to Menu</a>
+        <a href="{{ url_for('index') }}" class="menu-button">Back to Menu</a>
     </div>
 </body>
 </html>

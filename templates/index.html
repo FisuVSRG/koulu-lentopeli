@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flight Game Menu</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
     <div class="menu-container">
         <h1 class="title">FLIGHT_GAME</h1>
         <div class="menu">
-            <a href="play.html" class="menu-button">PLAY</a>
-            <a href="leaderboards.html" class="menu-button">LEADERBOARDS</a>
-            <a href="help.html" class="menu-button">HELP</a>
+            <a href="{{ url_for('play') }}" class="menu-button">PLAY</a>
+            <a href="{{ url_for('leaderboards') }}" class="menu-button">LEADERBOARDS</a>
+            <a href="{{ url_for('help') }}" class="menu-button">HELP</a>
         </div>
     </div>
 </body>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Help - Flight Game</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
     <div class="menu-container">
@@ -15,7 +15,7 @@
             <li>Valitse lentokenttä, joka on korkeammalla merenpinnasta.</li>
             <li>Oikea vastaus antaa 100 pistettää, väärä vastaus antaa 0 pistettä.</li>
         </ul>
-        <a href="index.html" class="menu-button">Back to Menu</a>
+        <a href="{{ url_for('index') }}" class="menu-button">Back to Menu</a>
     </div>
 </body>
 </html>
