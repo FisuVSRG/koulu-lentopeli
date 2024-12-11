@@ -64,7 +64,5 @@ def handle_form_ajax():
     except Exception as e:
         return jsonify(message=str(e)), 400
 
-
-
 if __name__ == "__main__":
     app.run(debug=True)
