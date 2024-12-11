@@ -1,0 +1,196 @@
+@font-face {
+    font-family: 'Minecraft';
+    src: url('Minecraft/MinecraftRegular-Bmg3.otf') format('truetype');
+}
+
+body {
+    font-family: 'Minecraft', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: url('background.jpg') no-repeat center center fixed;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Common Button Styles */
+.menu-button {
+    background: #2e8b57;
+    border: 2px solid #1d5e3a;
+    color: white;
+    padding: 1rem 2rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.3s;
+    display: inline-block;
+    text-align: center;
+}
+
+.menu-button:hover {
+    transform: scale(1.1);
+    background: #3cb371;
+}
+
+.menu-button:active {
+    transform: scale(1.05);
+    background: #276c4b;
+}
+
+/* General Menu Styles */
+.menu-container {
+    text-align: center;
+    color: white;
+    text-shadow: 2px 2px 5px black;
+}
+
+.title {
+    font-size: 4rem;
+    margin-bottom: 2rem;
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Styles for Play Page */
+.play-page .menu-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+}
+
+.play-page .vertical-line {
+    width: 2px;
+    height: 100vh;
+    background-color: black;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Centering Option 1 (Left Half) and Option 2 (Right Half) */
+.play-page .left, .play-page .right {
+    width: auto;  /* Remove fixed width to make the buttons smaller */
+    padding: 0.8rem 1.5rem;  /* Adjust the padding to make the buttons less wide */
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Left side (Option 1) */
+.play-page .left {
+    left: 10%;  /* Positioned within the left half */
+}
+
+/* Right side (Option 2) */
+.play-page .right {
+    right: 10%;  /* Positioned within the right half */
+}
+
+/* Specific Styles for the Back to Menu Button on Other Pages */
+.menu-container .menu-button.back-to-menu {
+    margin-top: 2rem;  /* Moves the "Back to Menu" button down */
+}
+
+/* Remove list dots on the Help page */
+.menu-container ul {
+    list-style-type: none;  /* Remove the bullets */
+    padding: 0;  /* Remove any default padding */
+    margin: 0;  /* Remove any default margin */
+}
+
+.menu-container li {
+    margin: 10px 0;  /* Optional: Adds some spacing between list items */
+}
+
+
+/* Leaderboard and other page elements */
+.leaderboard {
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background for leaderboard */
+    padding: 1rem;
+    border-radius: 20px;
+    max-width: 400px;
+    margin: 0 auto;
+    color: white;
+}
+
+.leaderboard ol {
+    list-style: decimal;
+    padding: 1rem;
+    margin: 1rem;
+    font-size: 1.2rem;
+}
+
+.leaderboard li {
+    margin: 0.5rem 0;
+}
+
+.username-form {
+    margin: 20px auto;
+    text-align: center;
+}
+
+.username-form input {
+    padding: 0.8rem;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    border: 2px solid #1d5e3a;
+    background-color: #fff;
+    color: #333;
+    font-family: 'Minecraft', sans-serif; /* Minecraft font for input */
+}
+
+.username-form button {
+    background: #2e8b57;
+    border: 2px solid #1d5e3a;
+    color: white;
+    padding: 1rem 2rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.3s;
+    font-family: 'Minecraft', sans-serif; /* Minecraft font for the button */
+}
+
+.username-form button:hover {
+    transform: scale(1.1);
+    background: #3cb371;
+}
+
+.username-form button:active {
+    transform: scale(1.05);
+    background: #276c4b;
+}
+
+.menu-button {
+    background: #2e8b57;
+    border: 2px solid #1d5e3a;
+    color: white;
+    padding: 1rem 2rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.3s;
+    display: inline-block;
+    text-align: center;
+    font-family: 'Minecraft', sans-serif; /* Minecraft font for other buttons */
+}
+
+.menu-button:hover {
+    transform: scale(1.1);
+    background: #3cb371;
+}
+
+.menu-button:active {
+    transform: scale(1.05);
+    background: #276c4b;
+}
