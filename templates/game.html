@@ -4,13 +4,16 @@
     <meta charset="UTF-8">
     <title>Game Page</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
+    <div id="name">
     <h1>Enter Username</h1>
     <form id="usernameForm">
         <input type="text" id="username" name="username" required>
         <button type="submit">Submit</button>
     </form>
+    </div>
     <div id="message"></div>
 
     <script>

@@ -3,29 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to the Game Scores App</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Flight Game Menu</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="menu-container">
-        <h1>Flight Game</h1>
-        <button class="menu-button" onclick="startGame()">Start Game</button>
-        <button class="menu-button" onclick="viewLeaderboard()">Leaderboard</button>
-        <button class="menu-button" onclick="howToPlay()">How to Play</button>
+        <h1 class="title">FLIGHT_GAME</h1>
+        <div class="menu">
+            <a href="play.html" class="menu-button">PLAY</a>
+            <a href="leaderboards.html" class="menu-button">LEADERBOARDS</a>
+            <a href="help.html" class="menu-button">HELP</a>
+        </div>
     </div>
-
-    <script>
-        function startGame() {
-            window.location.href = "/game"; // Update this URL to the appropriate route
-        }
-
-        function viewLeaderboard() {
-            window.location.href = "/top-scores"; // Update this URL to the appropriate route
-        }
-
-        function howToPlay() {
-            window.location.href = "/how-to-play"; // Update this URL to the appropriate route
-        }
-    </script>
 </body>
 </html>

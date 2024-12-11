@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Top Scores</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Leaderboards - Flight Game</title>
+    <link rel="stylesheet" href="styles.css">
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             fetch('/leaderboards')
@@ -28,17 +28,23 @@
     </script>
 </head>
 <body>
-    <h1>Top Scores</h1>
-    <table id="scoresTable">
-        <thead>
-            <tr>
-                <th>Username</th>
-                <th>Score</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- JavaScript will dynamically populate this section -->
-        </tbody>
-    </table>
+    <div class="menu-container">
+        <h1 class="title">LEADERBOARDS</h1>
+        <p>Here are the top scores in the game!</p>
+        <div class="leaderboard">
+            <table id="scoresTable">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- JavaScript will dynamically populate this section -->
+                </tbody>
+            </table>
+        </div>
+        <a href="index.html" class="menu-button">Back to Menu</a>
+    </div>
 </body>
 </html>
