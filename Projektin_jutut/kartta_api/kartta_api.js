@@ -1,22 +1,16 @@
-function createLeafletMap(coordinates, zoomLevel = 5) {
-  // Define map options with dynamic center based on coordinates
-  let mapOptions = {
-    center: coordinates,
-    zoom: zoomLevel
-  };
+// Function to initialize a Leaflet map
+function createLeafletMap(elementId, coordinates, zoomLevel = 5) {
+    const map = L.map(elementId).setView(coordinates, zoomLevel);
 
-  // Create the map
-  let map = new L.map('map', mapOptions);
+    // Add OpenStreetMap tile layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    }).addTo(map);
 
-  // Add the tile layer
-  let layer = new L.TileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-  });
-  map.addLayer(layer);
-
-  // Add a marker to the center (optional, can be customized)
-  let marker = new L.Marker(coordinates);
-  marker.addTo(map);
+    // Optional: Add a marker to the center of the map
+    L.marker(coordinates).addTo(map);
 }
 
-createLeafletMap([35.6895, 139.6917], 10); // Tokyo coordinates with zoom level 10
+// Initialize maps
+createLeafletMap('map-left', [37.7749, -122.4194], 5); // San Francisco
+createLeafletMap('map-right', [48.8566, 2.3522], 5);   // Paris
