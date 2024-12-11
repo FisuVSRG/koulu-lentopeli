@@ -78,8 +78,11 @@ class Peli:
                 if yhdistelma in self.vanhat_yhdistelmat and len(yhdistelma) == 2:
                     yhdistelma.clear()
 
+            # Convert the set to a list for unpacking
+            yhdistelma_list = list(yhdistelma)
+            icao_1, icao_2 = yhdistelma_list[0], yhdistelma_list[1]
+
             # Lisää yhdistelmä tietokantaan
-            icao_1, icao_2 = yhdistelma
             query_insert = """
                 INSERT INTO include (airport_ident1, airport_ident2, game_id)
                 VALUES (%s, %s, %s);
@@ -89,7 +92,7 @@ class Peli:
         except mysql.connector.Error as err:
             print(f"Virhe lentokentän arvonnassa: {err}")
             self.connection.rollback()
-        return yhdistelma
+        return yhdistelma_list
 
     def lisaa_pisteita(self):
         self.pisteet += 100

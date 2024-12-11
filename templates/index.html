@@ -3,17 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flight Game Menu</title>
+    <title>Main Menu</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
+
     <div class="menu-container">
         <h1 class="title">FLIGHT_GAME</h1>
         <div class="menu">
-            <a href="{{ url_for('play') }}" class="menu-button">PLAY</a>
+            <a href="{{ url_for('username') }}" class="menu-button">PLAY</a>
             <a href="{{ url_for('leaderboards') }}" class="menu-button">LEADERBOARDS</a>
             <a href="{{ url_for('help') }}" class="menu-button">HELP</a>
         </div>
     </div>
+
 </body>
 </html>

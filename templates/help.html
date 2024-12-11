@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Help - Flight Game</title>
+    <title>Help</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
 <body>
+
     <div class="menu-container">
         <h1 class="title">HELP</h1>
-        <p>Kuinka pelata?</p>
+        <p>How to play?</p>
         <ul>
-            <li>Saat vaihtoehtona kaksi lentokenttää.</li>
-            <li>Valitse lentokenttä, joka on korkeammalla merenpinnasta.</li>
-            <li>Oikea vastaus antaa 100 pistettää, väärä vastaus antaa 0 pistettä.</li>
+            <li>You will have a choice between two airports.</li>
+            <li>Your mission is to choose the one with the higher elevation.</li>
+            <li>Answering correctly will award you with 100 points. Wrong answer - 0 points.</li>
         </ul>
-        <a href="{{ url_for('index') }}" class="menu-button">Back to Menu</a>
+        <a href="{{ url_for('index') }}" class="menu-button">Back to Menu </a>
     </div>
 </body>
 </html>

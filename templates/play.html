@@ -3,87 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Play - Flight Game</title>
+    <title>Play</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </head>
-<body>
-    <div class="menu-container">
-        <form id="usernameForm">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
-        <button type="submit">Submit</button>
-    </form>
-    <div id="gameContent">
-        <h2>Hello, <span id="displayUsername"></span>!</h2>
-        <p>Welcome to the game! Make your choices below:</p>
-        <div>
-            <button onclick="playRound('correct')">Correct Answer</button>
-            <button onclick="playRound('wrong')">Wrong Answer</button>
-        </div>
-        <p>Your current score: <span id="currentScore">0</span></p>
-        <button onclick="saveScores()">Save Scores</button>
+<script>
+    const username = "{{ username }}"; // Get username from Flask
+    document.addEventListener('DOMContentLoaded', async () => {
+        document.getElementById('displayUsername').textContent = username;
+        await playGame(); // Start the game when the page loads
+    });
+</script>
+<body class="play-page">
+<h2>Hello, <span id="displayUsername"></span>!</h2>
+    <div id="game-content" class="menu-container">
+        <button id="btn1" onclick="playRound('correct')" class="menu-button left">Correct Answer</button>
+        <div class="vertical-line"></div>
+        <button id="btn2" onclick="playRound('wrong')" class="menu-button right">Wrong Answer</button>
     </div>
-    <script>
-        document.getElementById('usernameForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const username = document.getElementById('username').value;
-            const user_id = Math.floor(Math.random() * 1000); // Example: Generate a mock user ID
-
-            const response = await fetch('/start_game', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ user_id, username })
-            });
-
-            const data = await response.json();
-            if (data.error) {
-                alert(data.error);
-                return;
-            }
-
-            document.getElementById('displayUsername').textContent = username;
-            document.getElementById('usernameForm').style.display = 'none';
-            document.getElementById('gameContent').style.display = 'block';
-        });
-
-        async function playRound(answer) {
-            const response = await fetch('/play_round', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ answer })
-            });
-
-            const data = await response.json();
-            if (data.error) {
-                alert(data.error);
-                return;
-            }
-
-            if (data.round_combination) {
-                alert(`Round combination: ${data.round_combination.join(', ')}`);
-            }
-
-            document.getElementById('currentScore').textContent = data.score;
-            alert(`Correct: ${data.correct}, Score: ${data.score}`);
-        }
-
-        async function saveScores() {
-            const response = await fetch('/save_scores', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' }
-            });
-
-            const data = await response.json();
-            if (data.error) {
-                alert(data.error);
-            } else {
-                alert(data.message);
-            }
-        }
-    </script>
-    </div>
-<div>
-    <a href="{{ url_for('index') }}" class="menu-button">Back to Menu</a>
-</div>
 </body>
 </html>

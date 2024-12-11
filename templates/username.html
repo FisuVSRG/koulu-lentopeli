@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter Username</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</head>
+<body>
+    <div class="menu-container">
+        <h1 class="title">Welcome</h1>
+        <p>Please enter a username to continue:</p>
+
+        <!-- Username Form -->
+        <form action="{{ url_for('play') }}" method="GET" class="username-form">
+            <input type="text" name="username" id="username" placeholder="Enter Username" required>
+            <button type="submit" class="menu-button">Submit</button>
+        </form>
+
+        <a href="{{ url_for('index') }}" class="menu-button">Back to Menu </a>
+    </div>
+
+</body>
+</html>
