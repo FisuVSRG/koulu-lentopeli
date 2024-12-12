@@ -6,6 +6,8 @@ let airport1Coordinates, airport1Country;
 let airport2Coordinates, airport2Country;
 let leftMap;
 let rightMap;
+let leftMarker;
+let rightMarker;
 
 function createLeftMap(elementId, coordinates, zoomLevel = 5) { // Default zoom level to 13
 
@@ -24,9 +26,6 @@ function createLeftMap(elementId, coordinates, zoomLevel = 5) { // Default zoom 
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       }).addTo(leftMap);
-
-      // Add a marker at the provided coordinates
-      L.marker(coordinates).addTo(leftMap);
     }
 
     function createRightMap(elementId, coordinates, zoomLevel = 5) { // Default zoom level to 13
@@ -46,13 +45,13 @@ function createLeftMap(elementId, coordinates, zoomLevel = 5) { // Default zoom 
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       }).addTo(rightMap);
-
-      // Add a marker at the provided coordinates
-      L.marker(coordinates).addTo(rightMap);
     }
 
     function updateLeftMap(elementId, coordinates, zoomLevel = 5){
 
+    if (leftMarker) {
+        leftMap.removeLayer(leftMarker);
+    }
     // Avoid modifying the original coordinates array
       const adjustedCoordinates = [coordinates[0], coordinates[1]]; // Add offset to create a new array
 
@@ -63,10 +62,13 @@ function createLeftMap(elementId, coordinates, zoomLevel = 5) { // Default zoom 
 
       leftMap = leftMap.setView(mapOptions.center, mapOptions.zoom);
 
-      L.marker(coordinates).addTo(leftMap);
+      leftMarker = L.marker(coordinates).addTo(leftMap);
     }
     function updateRightMap(elementId, coordinates, zoomLevel = 5){
 
+    if (rightMarker) {
+        rightMap.removeLayer(rightMarker);
+    }
     // Avoid modifying the original coordinates array
       const adjustedCoordinates = [coordinates[0], coordinates[1]]; // Add offset to create a new array
 
@@ -77,7 +79,7 @@ function createLeftMap(elementId, coordinates, zoomLevel = 5) { // Default zoom 
 
       rightMap = rightMap.setView(mapOptions.center, mapOptions.zoom);
 
-      L.marker(coordinates).addTo(rightMap);
+      rightMarker = L.marker(coordinates).addTo(rightMap);
     }
 
 function fetchCountryInfo(countryCode, infoBoxContentId) {
