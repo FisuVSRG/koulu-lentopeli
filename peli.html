@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Play</title>
+    <link rel="stylesheet" href="styles.css">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+
+    <style>
+       /* Info Boxes */
+        /* Styling for the maps */
+        .map-container {
+            display: flex;
+            justify-content: space-between;
+            position: fixed; /* To allow positioning the info boxes */
+            margin: 100px;
+        }
+
+        .map {
+            width: 45%;
+            height: 800px;
+            border: 2px solid #007bff;
+            border-radius: 8px;
+        }
+
+        /* Semi-transparent info boxes over the maps */
+        .map-info {
+            position: absolute;
+            width: 45%;
+            top: 10px; /* Adjusted to position below the buttons but on the map */
+            left: 0;
+            right: 0;
+            margin: auto;
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
+            border: 2px solid #333;
+            border-radius: 8px;
+            z-index: 10;
+        }
+
+        .map-info.left {
+            left: 10%; /* Position over the left map */
+        }
+
+        .map-info.right {
+            right: 10%; /* Position over the right map */
+        }
+
+        /* Styling for the buttons below */
+        .info-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            margin: 30px auto 0;
+            width: 80%;
+        }
+
+        .info-box {
+            position: absolute;
+            top: 70%;
+            left: 15%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black background */
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .info-box:nth-child(2) {
+            top: 70%;
+            left: 85%;
+        }
+    </style>
+
+</head>
+<body class="play-page">
+<div class="map-container">
+    <div id="map-left" class="map"></div>
+    <div id="map-right" class="map"></div>
+</div>
+
+<div class="text-box">
+    Choose the airport that you think has the higher elevation.
+</div>
+
+
+<div class="divider"></div>
+
+<div class="option-buttons">
+    <button class="menu-button left">Option 1</button>
+    <button class="menu-button right">Option 2</button>
+</div>
+
+
+<div class="info-boxes">
+    <div id="info-left" class="info-box">Country info for Option 1 will appear here.</div>
+    <div id="info-right" class="info-box">Country info for Option 2 will appear here.</div>
+</div>
+
+
+<div id="info-box-1">
+    <p>API info for the first map image goes here.</p>
+</div>
+
+<div id="info-box-2">
+    <p>API info for the second map image goes here.</p>
+</div>
+
+<script>
+  // Function to fetch data for a specific country
+  function fetchCountryInfo(countryCode, infoBoxContentId) {
+    const url = `https://restcountries.com/v3.1/name/${countryCode}`;
+
+    fetch(url).then(response => response.json()).then(data => {
+      if (data.length > 0) {
+        const countryData = data[0]; // Assuming the first result is relevant
+        const infoBoxContent = document.getElementById(infoBoxContentId);
+        infoBoxContent.textContent = formatCountryInfo(countryData); // Call a function to format the data
+      } else {
+        console.error(`No country found for code: ${countryCode}`);
+      }
+    }).catch(error => console.error(error));
+  }
+
+  // Function to format retrieved country data (optional)
+  function formatCountryInfo(countryData) {
+    // You can customize this function to display specific data fields
+    // Here's an example showing name, capital, and population
+    return `
+    <b>Country:</b> ${countryData.name.common}<br>
+    <b>Capital:</b> ${countryData.capital[0]}<br>
+    <b>Population:</b> ${countryData.population.toLocaleString()}
+  `;
+  }
+
+  // Replace these with actual country codes relevant to your map images
+  const countryCode1 = 'Finland'; // Replace with the country code for image 1
+  const countryCode2 = 'Sweden'; // Replace with the country code for image 2
+
+  // Call the fetch function for each info box
+  fetchCountryInfo(countryCode1, 'info-box-content-1');
+  fetchCountryInfo(countryCode2, 'info-box-content-2');
+</script>
+
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+<script src="kartta_api.js"></script>
+</body>
+</html>
