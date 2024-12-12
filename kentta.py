@@ -64,8 +64,32 @@ class Lentokentta:
             print(f"Virhe lentokentän koordinaattien haussa: {e}")
             return None
 
-        finally:
-            self.close_connection()
+    def hae_maa(self):
+        try:
+            # First, get the ISO country code from the Airport table
+            query = "SELECT iso_country FROM Airport WHERE ident = %s"
+            self.cursor.execute(query, (self.icao,))
+            result = self.cursor.fetchone()
+
+            if result:
+                iso_country = result[0]  # Extract the ISO code from the tuple
+
+                # Second, use the ISO code to get the country name from the Country table
+                query = "SELECT name FROM Country WHERE iso_country = %s"
+                self.cursor.execute(query, (iso_country,))
+                result = self.cursor.fetchone()
+
+                if result:
+                    maa = result[0]
+                    return maa
+                else:
+                    print(f"Country not found for ISO code {iso_country}")
+            else:
+                print(f"Airport not found for ICAO code {self.icao}")
+            return None
+        except mysql.connector.Error as e:
+            print(f"Error fetching country: {e}")
+            return None
 
     def close_connection(self):
         if self.connection:  # Tarkista, että yhteys on olemassa

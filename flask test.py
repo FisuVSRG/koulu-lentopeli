@@ -140,17 +140,33 @@ def get_airports():
         if not airport1.korkeus or not airport2.korkeus:
             return jsonify({"error": "Missing elevation data for one or more airports"}), 500
 
+        airport1_coordinates = airport1.hae_koordinaatit() or [None, None]
+        airport1_country = airport1.hae_maa() or "Unknown Country"
+
+        airport2_coordinates = airport2.hae_koordinaatit() or [None, None]
+        airport2_country = airport2.hae_maa() or "Unknown Country"
+        print(airport1_country)
+        print(airport2_country)
+        print(airport1_coordinates)
+        print(airport2_coordinates)
+
+
+
         # Store the current airport pair in the session
         session['current_airports'] = {
             "airport1": {
                 "ident": airport1.icao,
                 "name": airport1.nimi,
                 "elevation": airport1.korkeus,
+                "coordinates": airport1_coordinates,
+                "country": airport1_country,
             },
             "airport2": {
                 "ident": airport2.icao,
                 "name": airport2.nimi,
                 "elevation": airport2.korkeus,
+                "coordinates": airport2_coordinates,
+                "country": airport2_country,
             },
         }
 
@@ -160,11 +176,15 @@ def get_airports():
                 "ident": airport1.icao,
                 "name": airport1.nimi,
                 "elevation": airport1.korkeus,
+                "coordinates": airport1_coordinates,
+                "country": airport1_country,
             },
             "airport2": {
                 "ident": airport2.icao,
                 "name": airport2.nimi,
                 "elevation": airport2.korkeus,
+                "coordinates": airport2_coordinates,
+                "country": airport2_country,
             },
         })
     except Exception as e:
@@ -214,14 +234,11 @@ def submit_answer():
 def save_scores():
     """Save the game's score to the database."""
     game_id = session.get('game_id')
-    user_id = session.get('user_id')
-    print(user_id)
     if not game_id or game_id not in active_games:
         return jsonify({"error": "No active game found"}), 400
 
     current_game = active_games[game_id]
     try:
-        print(current_game.pisteet)
         current_game.tallenna_pisteet()
         return jsonify({
             "message": f"Scores saved successfully for user {current_game.username}.",

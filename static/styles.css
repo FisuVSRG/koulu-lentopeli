@@ -194,3 +194,129 @@ body {
     transform: scale(1.05);
     background: #276c4b;
 }
+/* ... other CSS styles ... */
+
+.map-container {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    z-index:0
+}
+
+.map {
+    flex: 1;
+    height: 100%;
+}
+
+.option-buttons {
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  transform: translateY(-50%);
+  width: 100%;
+}
+
+.menu-button {
+  /* ... other styles ... */
+  flex: 1; /* Make each button take up equal space */
+}
+.divider {
+  width: 2px;
+  height: 100%;
+  background-color: black;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Info Boxes */
+/* Styling for the maps */
+.map-container {
+    display: flex;
+    justify-content: space-between;
+    position: fixed; /* To allow positioning the info boxes */
+    margin: 100px;
+    min-width: 100%;
+    min-height: 100%;
+}
+
+.map {
+    width: 45%;
+    height: 800px;
+    border: 2px solid #007bff;
+    border-radius: 8px;
+}
+
+/* Semi-transparent info boxes over the maps */
+.map-info {
+    position: absolute;
+    width: 35%;
+    height: 150px;
+    top: 10px; /* Adjusted to position below the buttons but on the map */
+    left: 0;
+    right: 0;
+    margin: auto;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
+    border: 2px solid #333;
+    border-radius: 8px;
+    z-index: 10;
+}
+
+.map-info.left {
+    left: 10%; /* Position over the left map */
+}
+
+.map-info.right {
+    right: 10%; /* Position over the right map */
+}
+
+/* Styling for the buttons below */
+.info-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    margin: 30px auto 0;
+    width: 80%;
+}
+
+.info-box {
+    position: absolute;
+    width: 200px; /* Fixed width for uniform shape */
+    height: 100px; /* Fixed height for uniform shape */
+    white-space: normal;
+    top: 90%;
+    left: 15%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black background */
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    z-index:3;
+    box-sizing: border-box
+}
+
+.info-box:nth-child(2) {
+    top: 90%;
+    left: 85%;
+}
+.text-box {
+    text-align: center;
+    color: white;
+    font-size: 1.5rem;
+    position: absolute;
+    top: 10px; /* Adjust the top position as needed */
+    left: 50%;
+    transform: translateX(-50%); /* Center the box horizontally */
+    width: 70%; /* Adjust the width as needed */
+    margin: 10px;
+    padding: 15px;
+    border: 2px solid #007bff;
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 3;
+}
