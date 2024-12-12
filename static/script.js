@@ -46,6 +46,8 @@ async function playGame() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
     });
+    window.location.href = '/';
+
 }
 
 async function playRound(answer) {

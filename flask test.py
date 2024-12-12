@@ -97,12 +97,14 @@ def start_game():
         # Create a new game instance
         new_game = Peli(user_id, username)
         game_id = new_game.game_id
+        user_id = new_game.user_id
 
         # Store the game instance in active games
         active_games[game_id] = new_game
 
         # Save game_id in session for subsequent use
         session['game_id'] = game_id
+        session['user_id'] = user_id
 
         return jsonify({
             "message": "Game started",
@@ -116,6 +118,7 @@ def start_game():
 @app.route('/get_airports', methods=['GET'])
 def get_airports():
     game_id = session.get('game_id')
+    user_id = session.get('user_id')
     if not game_id or game_id not in active_games:
         return jsonify({"error": "No active game found"}), 400
 
@@ -174,6 +177,9 @@ def submit_answer():
     if 'current_airports' not in session:
         return jsonify({'error': 'No airport pair available. Please try again.'})
 
+    game_id = session.get('game_id')
+    current_game = active_games[game_id]
+    game_score = current_game.pisteet
     # Retrieve the saved airport pair
     current_airports = session['current_airports']
     airport1 = current_airports['airport1']
@@ -193,15 +199,14 @@ def submit_answer():
     is_correct = (selected_airport == correct_answer)
 
     # Update score or any other game logic here
-    score = session.get('score', 0)
     if is_correct:
-        score += 100
-    session['score'] = score
+        current_game.lisaa_pisteita()
+        game_score = current_game.pisteet
 
     return jsonify({
         'correct': is_correct,
         'correct_answer': correct_answer,
-        'score': score
+        'score': game_score
     })
 
 
@@ -209,11 +214,14 @@ def submit_answer():
 def save_scores():
     """Save the game's score to the database."""
     game_id = session.get('game_id')
+    user_id = session.get('user_id')
+    print(user_id)
     if not game_id or game_id not in active_games:
         return jsonify({"error": "No active game found"}), 400
 
     current_game = active_games[game_id]
     try:
+        print(current_game.pisteet)
         current_game.tallenna_pisteet()
         return jsonify({
             "message": f"Scores saved successfully for user {current_game.username}.",
