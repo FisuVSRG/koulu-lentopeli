@@ -13,6 +13,7 @@ class Lentokentta:
         self.korkeus = self.hae_korkeus() # kutsutaan aliohjelmaa joka hakee korkeuden
         self.nimi = self.hae_nimi() # kutsutaan aliohjelmaa joka hakee nimen
         self.koordinaatit = self.hae_koordinaatit() # kutsutaan aliohjelmaa joka hakee koordinaatit
+        self.maa = self.hae_maa()
 
     def hae_korkeus(self): # hakee kentän korkeuden SQL tietokannasta
 
@@ -64,8 +65,32 @@ class Lentokentta:
             print(f"Virhe lentokentän koordinaattien haussa: {e}")
             return None
 
-        finally:
-            self.close_connection()
+    def hae_maa(self):
+        try:
+            # First, get the ISO country code from the Airport table
+            query = "SELECT iso_country FROM Airport WHERE ident = ?"
+            self.cursor.execute(query, (self.icao,))
+            result = self.cursor.fetchone()
+
+            if result:
+                iso_country = result[0]  # Extract the ISO code from the tuple
+
+                # Second, use the ISO code to get the country name from the Country table
+                query = "SELECT name FROM Country WHERE iso_country = ?"
+                self.cursor.execute(query, (iso_country,))
+                result = self.cursor.fetchone()
+
+                if result:
+                    maa = result[0]
+                    return maa
+                else:
+                    print(f"Country not found for ISO code {iso_country}")
+            else:
+                print(f"Airport not found for ICAO code {self.icao}")
+            return None
+        except mariadb.Error as e:
+            print(f"Error fetching country: {e}")
+            return None
 
     def close_connection(self):
         if self.connection:  # Tarkista, että yhteys on olemassa
@@ -74,3 +99,5 @@ class Lentokentta:
                 self.connection = None  # Nollaa yhteys attribuutista
             except mariadb.Error as e:
                 print(f"Virhe yhteyden sulkemisessa: {e}")
+
+

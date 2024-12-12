@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+<body>
+
+    <div class="menu-container">
+        <h1 class="title">HELP</h1>
+        <p>How to play?</p>
+        <ul>
+            <li>You will have a choice between two airports.</li>
+            <li>Your mission is to choose the one with the higher elevation.</li>
+            <li>Answering correctly will award you with 100 points. Wrong answer - 0 points.</li>
+        </ul>
+        <a href="{{ url_for('index') }}" class="menu-button">Back to Menu </a>
+    </div>
+</body>
+</html>
