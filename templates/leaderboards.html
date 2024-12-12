@@ -12,17 +12,8 @@
         <h1 class="title">LEADERBOARDS</h1>
         <p>Here are the top scores in the game!</p>
         <div class="leaderboard">
-            <ol>
-                <li>Player1 - 5000</li>
-                <li>Player2 - 4500</li>
-                <li>Player3 - 4000</li>
-                <li>Player4 - 3500</li>
-                <li>Player5 - 3000</li>
-                <li>Player6 - 2500</li>
-                <li>Player7 - 2000</li>
-                <li>Player8 - 1500</li>
-                <li>Player9 - 1000</li>
-                <li>Player10 - 500</li>
+            <ol id="leaderboard-list">
+                <!-- Leaderboard items will be dynamically inserted here -->
             </ol>
         </div>
         <a href="{{ url_for('index') }}" class="menu-button">Back to Menu </a>

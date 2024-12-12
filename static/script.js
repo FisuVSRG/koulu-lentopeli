@@ -82,6 +82,30 @@ function createLeftMap(elementId, coordinates, zoomLevel = 5) { // Default zoom 
       rightMarker = L.marker(coordinates).addTo(rightMap);
     }
 
+    async function fetchLeaderboards() {
+    try {
+        const response = await fetch('/api/leaderboards');
+        if (!response.ok) {
+            throw new Error('Failed to fetch leaderboards');
+        }
+
+        const scores = await response.json();
+
+        const leaderboardList = document.getElementById('leaderboard-list');
+        leaderboardList.innerHTML = ''; // Clear any existing content
+
+        scores.forEach((entry) => {
+            const listItem = document.createElement('li');
+            listItem.textContent = `${entry.username} - ${entry.score}`;
+            leaderboardList.appendChild(listItem);
+        });
+    } catch (error) {
+        console.error('Error fetching leaderboards:', error);
+        const leaderboardList = document.getElementById('leaderboard-list');
+        leaderboardList.innerHTML = '<li>Failed to load leaderboard data.</li>';
+    }
+}
+
 function fetchCountryInfo(countryCode, infoBoxContentId) {
     console.log(countryCode)
             const url = `https://restcountries.com/v3.1/name/${countryCode}`;
@@ -196,6 +220,12 @@ async function playRound(answer) {
     }
 
     document.getElementById('currentScore').textContent = data.score;
+}
+
+
+if (window.location.pathname === '/leaderboards') { // Adjust the path to match your leaderboard route
+    console.log("juuh")
+    fetchLeaderboards();
 }
 
 console.log(document.getElementById('usernameForm'));
