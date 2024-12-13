@@ -1,0 +1,300 @@
+"use strict"
+let currentAirports = {};
+let currentRound = 0; // Initialize round counter
+const maxRounds = 10; // Maximum number of rounds
+let airport1Coordinates, airport1Country;
+let airport2Coordinates, airport2Country;
+let leftMap;
+let rightMap;
+let leftMarker;
+let rightMarker;
+
+function createLeftMap(elementId, coordinates, zoomLevel = 5) { // Default zoom level to 13
+
+     // Avoid modifying the original coordinates array
+      const adjustedCoordinates = [coordinates[0], coordinates[1]]; // Add offset to create a new array
+
+      const mapOptions = {
+        center: adjustedCoordinates,
+        zoom: zoomLevel
+      };
+
+      // Create the map instance
+      leftMap = L.map(elementId, mapOptions);
+
+      // Add the tile layer with attribution
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(leftMap);
+    }
+
+    function createRightMap(elementId, coordinates, zoomLevel = 5) { // Default zoom level to 13
+
+     // Avoid modifying the original coordinates array
+      const adjustedCoordinates = [coordinates[0], coordinates[1]]; // Add offset to create a new array
+
+      const mapOptions = {
+        center: adjustedCoordinates,
+        zoom: zoomLevel
+      };
+
+      // Create the map instance
+      rightMap = L.map(elementId, mapOptions);
+
+      // Add the tile layer with attribution
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(rightMap);
+    }
+
+    function updateLeftMap(elementId, coordinates, zoomLevel = 5){
+
+    if (leftMarker) {
+        leftMap.removeLayer(leftMarker);
+    }
+    // Avoid modifying the original coordinates array
+      const adjustedCoordinates = [coordinates[0], coordinates[1]]; // Add offset to create a new array
+
+      const mapOptions = {
+        center: adjustedCoordinates,
+        zoom: zoomLevel
+      };
+
+      leftMap = leftMap.setView(mapOptions.center, mapOptions.zoom);
+
+      leftMarker = L.marker(coordinates).addTo(leftMap);
+    }
+    function updateRightMap(elementId, coordinates, zoomLevel = 5){
+
+    if (rightMarker) {
+        rightMap.removeLayer(rightMarker);
+    }
+    // Avoid modifying the original coordinates array
+      const adjustedCoordinates = [coordinates[0], coordinates[1]]; // Add offset to create a new array
+
+      const mapOptions = {
+        center: adjustedCoordinates,
+        zoom: zoomLevel
+      };
+
+      rightMap = rightMap.setView(mapOptions.center, mapOptions.zoom);
+
+      rightMarker = L.marker(coordinates).addTo(rightMap);
+    }
+
+    async function fetchLeaderboards() {
+    try {
+        const response = await fetch('/api/leaderboards');
+        if (!response.ok) {
+            throw new Error('Failed to fetch leaderboards');
+        }
+
+        const scores = await response.json();
+
+        const leaderboardList = document.getElementById('leaderboard-list');
+        leaderboardList.innerHTML = ''; // Clear any existing content
+
+        scores.forEach((entry) => {
+            const listItem = document.createElement('li');
+            listItem.textContent = `${entry.username} - ${entry.score}`;
+            leaderboardList.appendChild(listItem);
+        });
+    } catch (error) {
+        console.error('Error fetching leaderboards:', error);
+        const leaderboardList = document.getElementById('leaderboard-list');
+        leaderboardList.innerHTML = '<li>Failed to load leaderboard data.</li>';
+    }
+}
+
+function fetchCountryInfo(countryCode, infoBoxContentId) {
+    console.log(countryCode)
+            const url = `https://restcountries.com/v3.1/name/${countryCode}`;
+
+            fetch(url).then(response => response.json()).then(data => {
+                if (data.length > 0) {
+                    const countryData = data[0];
+                    const infoBoxContent = document.getElementById(infoBoxContentId);
+                    infoBoxContent.textContent = formatCountryInfo(countryData);
+                } else {
+                    console.error(`No country found for code: ${countryCode}`);
+                }
+            }).catch(error => console.error(error));
+        }
+
+        function formatCountryInfo(countryData) {
+            return `
+            Country: ${countryData.name.common}
+            Capital: ${countryData.capital[0]}
+            Population: ${countryData.population.toLocaleString()}
+            `;
+        }
+
+async function fetchAirports() {
+    const response = await fetch('/get_airports');
+    const data = await response.json();
+
+    if (data.error) {
+        alert(data.error);
+        return;
+    }
+
+    // Store airport details in variables
+        airport1Coordinates = data.airport1.coordinates; // [latitude, longitude]
+        airport1Country = data.airport1.country;
+
+        airport2Coordinates = data.airport2.coordinates; // [latitude, longitude]
+        airport2Country = data.airport2.country;
+
+    // Store the fetched airports for later comparison
+    currentAirports = data;
+
+    // Update button labels with airport names
+    document.getElementById("btn1").textContent = `Choose: ${data.airport1.name}`;
+    document.getElementById("btn2").textContent = `Choose: ${data.airport2.name}`;
+
+    // Fetch and update country information
+    fetchCountryInfo(airport1Country, 'info-left');  // Update left info box
+    fetchCountryInfo(airport2Country, 'info-right'); // Update right info box
+
+    console.log('Airport 1 Coordinates:', airport1Coordinates);
+    console.log('Airport 1 Country:', airport1Country);
+    console.log('Airport 2 Coordinates:', airport2Coordinates);
+    console.log('Airport 2 Country:', airport2Country);
+
+    // Ensure the maps are created after the DOM is fully loaded
+      updateLeftMap('map-left', airport1Coordinates);
+      updateRightMap('map-right', airport2Coordinates);
+
+}
+function displayScore(score) {
+  const scoreElement = document.getElementById('current-score');
+  if (scoreElement) {
+    scoreElement.textContent = `Current Score: ${score}`;
+  } else {
+    console.error('Could not find current score element');
+  }
+}
+
+async function playGame() {
+
+    createLeftMap('map-left', [0, 0]);
+    createRightMap('map-right', [0, 0]);
+
+    for (currentRound = 1; currentRound <= maxRounds; currentRound++) {
+        await fetchAirports(); // Fetch new airport pair for the round
+
+        // Wait for the user to make a selection (handled by button clicks)
+        await new Promise((resolve) => {
+            document.getElementById("btn1").onclick = () => resolve(playRound("1"));
+            document.getElementById("btn2").onclick = () => resolve(playRound("2"));
+        });
+    }
+
+    // End the game after the loop
+    document.getElementById("btn1").disabled = true;
+    document.getElementById("btn2").disabled = true;
+    const finalScore = document.getElementById('currentScore').textContent;
+    displayGameOverMessage(`Game Over! Your final score is: ${finalScore}`);
+
+    await fetch('/save_scores', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+    });
+
+    // Delay the redirect until after the game over message disappears
+    setTimeout(() => {
+        window.location.href = '/';
+    }, 3000); // Adjust this time as needed
+}
+
+// Function to display the game-over message
+function displayGameOverMessage(message) {
+    const gameOverDiv = document.getElementById('game-over-message');
+    setTimeout(() => {gameOverDiv.textContent = message;
+    gameOverDiv.style.display = 'flex';}, 1000);
+
+    // Optionally, hide the message after a few seconds
+    setTimeout(() => {
+        gameOverDiv.style.display = 'none';
+    }, 2500);
+}
+
+
+async function playRound(answer) {
+    if (!currentAirports.airport1 || !currentAirports.airport2) {
+        alert("No airport combination available. Please try again.");
+        return;
+    }
+
+    const selectedAirport = answer; // "1" for the first airport, "2" for the second airport
+    const response = await fetch('/submit_answer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ selected_airport: selectedAirport })
+    });
+
+    const data = await response.json();
+    if (data.error) {
+        alert(data.error);
+        return;
+    }
+
+    // Display the full-screen background change and result message
+    const body = document.body;
+    const message = document.createElement('div');
+
+    message.classList.add('result-message');
+    message.textContent = data.correct ? 'Correct!' : 'Incorrect!';
+
+    body.appendChild(message);
+
+    // After 2 seconds, reset the background and remove the message
+    setTimeout(() => {
+        body.style.backgroundColor = ''; // Resets to default background
+        message.remove();
+        // Optionally, you can refresh or load the next round here
+    }, 500);
+
+    // Update the current score
+    document.getElementById('currentScore').textContent = data.score;
+    displayScore(data.score);
+
+}
+
+
+if (window.location.pathname === '/leaderboards') { // Adjust the path to match your leaderboard route
+    console.log("juuh")
+    fetchLeaderboards();
+}
+
+console.log(document.getElementById('usernameForm'));
+document.getElementsByClassName('username-form')[0].addEventListener('submit', async (e) => {
+    e.preventDefault();
+    console.log("Juuh")
+
+    const username = document.getElementById('username').value;
+    if (!username) {
+        alert("Please enter a username.");
+        return;
+    }
+
+    try {
+        const response = await fetch('/start_game', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username })
+        });
+
+        const data = await response.json();
+        if (data.error) {
+            alert(data.error);
+            return;
+        }
+
+        window.location.href = `/play?username=${username}`;
+        // Redirect or update UI if needed
+    } catch (err) {
+        console.error('Error:', err);
+        alert('Something went wrong.');
+    }
+});

@@ -97,12 +97,14 @@ def start_game():
         # Create a new game instance
         new_game = Peli(user_id, username)
         game_id = new_game.game_id
+        user_id = new_game.user_id
 
         # Store the game instance in active games
         active_games[game_id] = new_game
 
         # Save game_id in session for subsequent use
         session['game_id'] = game_id
+        session['user_id'] = user_id
 
         return jsonify({
             "message": "Game started",
@@ -116,6 +118,7 @@ def start_game():
 @app.route('/get_airports', methods=['GET'])
 def get_airports():
     game_id = session.get('game_id')
+    user_id = session.get('user_id')
     if not game_id or game_id not in active_games:
         return jsonify({"error": "No active game found"}), 400
 
@@ -137,17 +140,33 @@ def get_airports():
         if not airport1.korkeus or not airport2.korkeus:
             return jsonify({"error": "Missing elevation data for one or more airports"}), 500
 
+        airport1_coordinates = airport1.hae_koordinaatit() or [None, None]
+        airport1_country = airport1.hae_maa() or "Unknown Country"
+
+        airport2_coordinates = airport2.hae_koordinaatit() or [None, None]
+        airport2_country = airport2.hae_maa() or "Unknown Country"
+        print(airport1_country)
+        print(airport2_country)
+        print(airport1_coordinates)
+        print(airport2_coordinates)
+
+
+
         # Store the current airport pair in the session
         session['current_airports'] = {
             "airport1": {
                 "ident": airport1.icao,
                 "name": airport1.nimi,
                 "elevation": airport1.korkeus,
+                "coordinates": airport1_coordinates,
+                "country": airport1_country,
             },
             "airport2": {
                 "ident": airport2.icao,
                 "name": airport2.nimi,
                 "elevation": airport2.korkeus,
+                "coordinates": airport2_coordinates,
+                "country": airport2_country,
             },
         }
 
@@ -157,11 +176,15 @@ def get_airports():
                 "ident": airport1.icao,
                 "name": airport1.nimi,
                 "elevation": airport1.korkeus,
+                "coordinates": airport1_coordinates,
+                "country": airport1_country,
             },
             "airport2": {
                 "ident": airport2.icao,
                 "name": airport2.nimi,
                 "elevation": airport2.korkeus,
+                "coordinates": airport2_coordinates,
+                "country": airport2_country,
             },
         })
     except Exception as e:
@@ -174,6 +197,9 @@ def submit_answer():
     if 'current_airports' not in session:
         return jsonify({'error': 'No airport pair available. Please try again.'})
 
+    game_id = session.get('game_id')
+    current_game = active_games[game_id]
+    game_score = current_game.pisteet
     # Retrieve the saved airport pair
     current_airports = session['current_airports']
     airport1 = current_airports['airport1']
@@ -193,15 +219,14 @@ def submit_answer():
     is_correct = (selected_airport == correct_answer)
 
     # Update score or any other game logic here
-    score = session.get('score', 0)
     if is_correct:
-        score += 100
-    session['score'] = score
+        current_game.lisaa_pisteita()
+        game_score = current_game.pisteet
 
     return jsonify({
         'correct': is_correct,
         'correct_answer': correct_answer,
-        'score': score
+        'score': game_score
     })
 
 
@@ -209,14 +234,10 @@ def submit_answer():
 def save_scores():
     """Save the game's score to the database."""
     game_id = session.get('game_id')
-    print(game_id)
-    print(session.get('score'))
-
     if not game_id or game_id not in active_games:
         return jsonify({"error": "No active game found"}), 400
 
     current_game = active_games[game_id]
-    print(current_game)
     try:
         current_game.tallenna_pisteet()
         return jsonify({

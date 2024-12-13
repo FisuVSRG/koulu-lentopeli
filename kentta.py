@@ -13,7 +13,6 @@ class Lentokentta:
         self.korkeus = self.hae_korkeus() # kutsutaan aliohjelmaa joka hakee korkeuden
         self.nimi = self.hae_nimi() # kutsutaan aliohjelmaa joka hakee nimen
         self.koordinaatit = self.hae_koordinaatit() # kutsutaan aliohjelmaa joka hakee koordinaatit
-        self.maa = self.hae_maa()
 
     def hae_korkeus(self): # hakee kentän korkeuden SQL tietokannasta
 
@@ -99,5 +98,3 @@ class Lentokentta:
                 self.connection = None  # Nollaa yhteys attribuutista
             except mariadb.Error as e:
                 print(f"Virhe yhteyden sulkemisessa: {e}")
-
-

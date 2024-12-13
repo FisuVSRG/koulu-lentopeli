@@ -23,12 +23,15 @@ def tulostaulukko(top_mika):
         parhaat = cursor.fetchall()
 
         # Tulostetaan parhaat tulokset
-        if parhaat:
-            print(f"\nTOP {top_mika} PELAAJAA:")
-            for i, (nimi, score) in enumerate(parhaat, 1):
-                print(f"{i}. {nimi}: {score} pistettä")
-        else:
-            print("\nEi tuloksia näytettäväksi.")
+        results = []
+        for i in parhaat:
+            nimi, score = i
+            score_str = str(score)
+
+            if "None" not in score_str:
+                results.append({"username": nimi, "score": score})
+
+        return results
     except mariadb.Error as e:
         print(f"Virhe tulostaulukon hakemisessa: {e}")
     finally:

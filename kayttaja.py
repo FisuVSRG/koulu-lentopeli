@@ -10,7 +10,6 @@ class Kayttaja:
         self.cursor = self.connection.cursor()
         self.username = None
         self.user_id = None
-        self.tallenna_kayttajatunnus()
 
     def check_user_exists(self):
         try:
@@ -27,7 +26,7 @@ class Kayttaja:
             self.username = username
             query = "INSERT INTO user (username) VALUES (?)"
             self.cursor.execute(query, (username,))
-            self.connection.commit()  # Tallennetaan muutokset
+            self.connection.commit()
         except mariadb.Error as e:
             print(f"Virhe uuden käyttäjän lisäämisessä: {e}")
             self.connection.rollback()
@@ -42,13 +41,11 @@ class Kayttaja:
             print(f"Virhe käyttäjän ID:n hakemisessa: {e}")
             return None
 
-
-    def tallenna_kayttajatunnus(self):
+    def tallenna_kayttajatunnus(self, username):
         if self.connection is None:
             return None, None
 
         try:
-            username = input("Anna käyttäjätunnus: ")
             self.username = username  # Aseta käyttäjänimi
             if self.check_user_exists():
                 print(f"Tervetuloa takaisin, {self.username}!")
